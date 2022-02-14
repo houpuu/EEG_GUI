@@ -13,11 +13,13 @@ import tkinter as tk
 
 sys.path.append(r'.')
 
-
-
 window = tk.Tk()
 window.title('Welcome to the EEG World')
 window.geometry('1200x600')
+window.attributes('-toolwindow', True,
+                  '-alpha', 1,
+                  '-fullscreen', True,
+                  '-topmost', True)
 
 tk.Label(window, text="WELCOME TO EEG WORLD!", font=25).pack()
 
@@ -30,7 +32,6 @@ def edf_file():
     global x_test
     global sfreq
     global ch_names
-
 
     var = tk.StringVar()
 
@@ -90,7 +91,9 @@ def mat_file():
     sfreq.place(x=300, y=120)
 
     tk.Label(window, text="music:0-fear; 1-sad; 2-peace; 3-happy; 4-excited").place(x=700, y=50)
-    tk.Label(window, text="picture:0-face; 1-food; 2-landscape; 3-sick; 4-snake; 5-spider").place(x=700, y=70)
+    tk.Label(window, text="picture:0(5)-face; 1(6)-food; 2(7)-landscape; 3(8)-sick; 4(9)-snake; 5(10)-spider").place(x=700, y=80)
+    tk.Label(window, text="vidio:0(11)-sad emo; 1(12)-general emo; 2(13)-happy emo").place(x=700, y=110)
+    tk.Label(window, text="1-2,2-1,3-0,4-0,5-1,6-2,7-0,8-1,9-2,10-2,11-1,12-0,13-1,14-2,15-0").place(x=700, y=140)
 
     info_text = tk.Text(window, width=60, height=2, relief='flat')
     info_text.pack()
@@ -178,15 +181,36 @@ def TOPO():
     raw.plot_psd_topo()
     plt.show()
 
+def ALL_Model():
+
+    global model_m
+    model_m = load_model('C:\PycharmProjects\EEG_CNN\model\emotion_ver0.h5')
+
+def three_Model():
+    global model_m
+    model_m = load_model('C:\PycharmProjects\EEG_CNN\model\S3_Sample.h5')
+    tk.Label(window, text="music-0; picture-1; seed-2").place(x=50, y=520)
+
 def Music_model():
 
     global model_m
     model_m = load_model('C:\PycharmProjects\EEG_CNN\model\music_400_2.h5')
 
+
+def Picture_model():
+
+    global model_m
+    model_m = load_model('C:\PycharmProjects\EEG_CNN\model\picture_ver0.h5')
+
+def Video_model():
+
+    global model_m
+    model_m = load_model('C:\PycharmProjects\EEG_CNN\model\mvideo_ver0.h5')
+
 def Recognize():
 
     feature = model_m.predict(x_test, batch_size=1)
-    recognition_text = tk.Text(window, width=20, height=5, relief='flat')
+    recognition_text = tk.Text(window, width=40, height=5, relief='flat')
     recognition_text.pack()
     recognition_text.place(x=700, y=410)
     recognition_text.insert('insert', np.argmax(feature, axis=1))
@@ -246,14 +270,16 @@ def about_ver():
 
 #--------------------------------------------------------------------------------------------------------
 # fist level
-btn_sample = tk.Button(window, text="1. CNN_FILE", bg='darkseagreen', fg='black', font=5, width=18, command=cnn_file)
+btn_sample = tk.Button(window, text="1. CNN_FILE", bg='darkseagreen', fg='black', font=4, width=18, command=cnn_file)
 btn_sample.place(x=50, y=50)
-btn_sample = tk.Button(window, text="1. MAT_FILE", bg='darkseagreen', fg='black', font=5, width=18, command=mat_file)
+btn_sample = tk.Button(window, text="1. MAT_FILE", bg='darkseagreen', fg='black', font=4, width=18, command=mat_file)
 btn_sample.place(x=50, y=100)
-btn_sample = tk.Button(window, text="2. MAKE_SAMPLES", bg='darkseagreen', fg='black', font=5, width=18, command=MAKE_SAMPLES)
+btn_sample = tk.Button(window, text="2. MAKE_SAMPLES", bg='darkseagreen', fg='black', font=4, width=18, command=MAKE_SAMPLES)
 btn_sample.place(x=50, y=230)
-btn_sample = tk.Button(window, text="CHOOSE_CNN", bg='darkgray', fg='black', font=5, width=18)
+btn_sample = tk.Button(window, text="4. ALL_CLASS", bg='darkseagreen', fg='black', font=4, width=18, command=ALL_Model)
 btn_sample.place(x=50, y=410)
+btn_sample = tk.Button(window, text="4. Three_CLASS", bg='darkseagreen', fg='black', font=4, width=18, command=three_Model)
+btn_sample.place(x=50, y=470)
 
 #second level
 btn_sample = tk.Button(window, text="RAW INFORMATION", bg='darkturquoise', fg='black', width=17,  command=RAW_INFO)
@@ -275,11 +301,11 @@ btn_sample = tk.Button(window, text="BOUND TOPOMAP", bg='burlywood', fg='black',
 btn_sample.place(x=500, y=270)
 
 
-btn_sample = tk.Button(window, text="4. MUSIC EMOTION", bg='darkseagreen', fg='black', width=17,  command=Music_model)
+btn_sample = tk.Button(window, text="4.MUSIC EMOTION", bg='darkseagreen', fg='black', width=17,  command=Music_model)
 btn_sample.place(x=300, y=410)
-btn_sample = tk.Button(window, text="PICTURE EMOTION", bg='darkgray', fg='black', width=17,  command=Music_model)
+btn_sample = tk.Button(window, text="4.PICTURE EMOTION", bg='darkseagreen', fg='black', width=17,  command=Picture_model)
 btn_sample.place(x=300, y=450)
-btn_sample = tk.Button(window, text="COLOR EMOTION", bg='darkgray', fg='black', width=17,  command=Music_model)
+btn_sample = tk.Button(window, text="4.VIDEO EMOTION", bg='darkseagreen', fg='black', width=17,  command=Video_model)
 btn_sample.place(x=300, y=490)
 btn_sample = tk.Button(window, text="5. RECOGNIZE", bg='darkseagreen', fg='black', width=17, command=Recognize)
 btn_sample.place(x=500, y=410)
